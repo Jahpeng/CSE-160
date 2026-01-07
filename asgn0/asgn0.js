@@ -19,12 +19,47 @@ function main() {
   // handleDrawEvent();
 }
 
-// function drawVector(v,color) {}
+function handleDrawOperationEvent(){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'rgba(0, 0, 0, 1.0)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  let v1x = Number(document.getElementById("v1x").value);
+  let v1y = Number(document.getElementById("v1y").value);
+
+  let v2x = Number(document.getElementById("v2x").value);
+  let v2y = Number(document.getElementById("v2y").value);
+
+  let v1 = new Vector3([v1x, v1y, 0]);
+  drawVector(v1, 'red');
+
+  let v2 = new Vector3([v2x, v2y, 0]);
+  drawVector(v2, 'blue');
+
+  let op = document.getElementById("math").value;
+
+  if (op == "add" || op == "sub") {
+    drawVector(v1[op](v2), 'green');
+  }
+  else {
+    let s = Number(document.getElementById("scale").value);
+    drawVector(v1[op](s), 'green');
+    drawVector(v2[op](s), 'green');
+  }
+
+}
+
 function handleDrawEvent(){
   let v1x = Number(document.getElementById("v1x").value);
   let v1y = Number(document.getElementById("v1y").value);
-  console.log(v1x);
-  console.log(v1y);
+
+  let v2x = Number(document.getElementById("v2x").value);
+  let v2y = Number(document.getElementById("v2y").value);
+
+  //console.log(v1x);
+  //console.log(v1y);
+  //console.log(v2x);
+  //console.log(v2y);
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = 'rgba(0, 0, 0, 1.0)';
@@ -32,6 +67,9 @@ function handleDrawEvent(){
 
   let v1 = new Vector3([v1x, v1y, 0]);
   drawVector(v1, 'red');
+
+  let v2 = new Vector3([v2x, v2y, 0]);
+  drawVector(v2, 'blue');
 
   //ctx.strokeStyle = 'red';
   //let cx = canvas.width / 2;  // canvas center on x axis
@@ -47,9 +85,9 @@ function handleDrawEvent(){
 }
 
 function drawVector(vect, color){
-  console.log('here');
-  console.log(vect.elements[0]);
-  console.log(vect.elements[1]);
+  //console.log('here');
+  //console.log(vect.elements[0]);
+  //console.log(vect.elements[1]);
   let cx = canvas.width / 2;  // canvas center on x axis
   let cy = canvas.height / 2; // canvas center on y axis
   ctx.strokeStyle = color;

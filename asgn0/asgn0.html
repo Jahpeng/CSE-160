@@ -34,6 +34,29 @@
       minlength="4"
       maxlength="8"
       size="10" />
+
+    <br>
+    <label for="name">v2:</label>
+    <label for="namex">x</label>
+
+    <input
+      type="text"
+      id="v2x"
+      name="v2x"
+      required
+      minlength="4"
+      maxlength="8"
+      size="10" />
+
+    <label for="namey">y</label>
+    <input
+      type="text"
+      id="v2y"
+      name="v2y"
+      required
+      minlength="4"
+      maxlength="8"
+      size="10" />
     
     <br>
     <input type="button" value="draw" onclick="handleDrawEvent()"></input>
@@ -41,11 +64,25 @@
     <br><br>
     <label for="pet-select">Operation:</label>
 
-      <select name="pets" id="pet-select">
-        <option value="">--Please choose an option--</option>
+      <select name="math" id="math">
         <option value="add">Add</option>
         <option value="sub">Subtract</option>
+        <option value="mul">Multiply</option>
+        <option value="div">Divide</option>
       </select>
+    
+    <label for="name">Scalar:</label>
+    <input
+      type="text"
+      id="scale"
+      name="scale"
+      required
+      minlength="4"
+      maxlength="8"
+      size="10" />
+
+    <br>
+    <input type="button" value="draw" onclick="handleDrawOperationEvent()"></input>
 
   </body>
 </html>
