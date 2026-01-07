@@ -11,5 +11,41 @@
     </canvas>
     <script src="asgn0.js"></script>
     <script src="lib/cuon-matrix-cse160.js"></script>
+    
+    <br>
+    <label for="name">v1:</label>
+    <label for="namex">x</label>
+
+    <input
+      type="text"
+      id="v1x"
+      name="v1x"
+      required
+      minlength="4"
+      maxlength="8"
+      size="10" />
+
+    <label for="namey">y</label>
+    <input
+      type="text"
+      id="v1y"
+      name="v1y"
+      required
+      minlength="4"
+      maxlength="8"
+      size="10" />
+    
+    <br>
+    <input type="button" value="draw" onclick="handleDrawEvent()"></input>
+
+    <br><br>
+    <label for="pet-select">Operation:</label>
+
+      <select name="pets" id="pet-select">
+        <option value="">--Please choose an option--</option>
+        <option value="add">Add</option>
+        <option value="sub">Subtract</option>
+      </select>
+
   </body>
 </html>
