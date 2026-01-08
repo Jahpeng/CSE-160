@@ -41,12 +41,32 @@ function handleDrawOperationEvent(){
   if (op == "add" || op == "sub") {
     drawVector(v1[op](v2), 'green');
   }
-  else {
+  else if (op == "mul" || op == "div"){
     let s = Number(document.getElementById("scale").value);
     drawVector(v1[op](s), 'green');
     drawVector(v2[op](s), 'green');
   }
+  else if (op == "magnitude"){
+    console.log("Magnitude v1:", v1.magnitude());
+    console.log("Magnitude v2:", v2.magnitude());
+  }
+  else if (op == "normalize"){
+    drawVector(v1.normalize(), 'green');
+    drawVector(v2.normalize(), 'green');
+  }
+  else if (op == "angle"){
+    console.log("Angle:", Math.acos(Vector3.dot(v1,v2)/(v1.magnitude()*v2.magnitude()))*(180/Math.PI));
+  }
+  else if (op == "area"){
+    areaTriangle(v1, v2);
+  }
 
+}
+
+function areaTriangle(v1, v2){
+  const v3 = Vector3.cross(v1, v2);
+  //const e = v3.elements;
+  console.log("Area of the triangle:", v3.magnitude() / 2);
 }
 
 function handleDrawEvent(){
