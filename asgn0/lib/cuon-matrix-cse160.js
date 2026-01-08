@@ -51,6 +51,7 @@ class Vector3 {
 
         curr[0] += o[0];
         curr[1] += o[1];
+        curr[2] += o[2];
         // Don't delete the return statement.
         return this;
     };
@@ -67,6 +68,7 @@ class Vector3 {
 
         curr[0] -= o[0];
         curr[1] -= o[1];
+        curr[2] -= o[2];
         // Don't delete the return statement.
         return this;
     };
@@ -80,8 +82,9 @@ class Vector3 {
         // This function should change this vector (this.elements) and not create a new vector.
         const curr = this.elements;
 
-        curr[0] /= scalar
-        curr[1] /= scalar
+        curr[0] /= scalar;
+        curr[1] /= scalar;
+        curr[2] /= scalar;
         // Don't delete the return statement.
         return this;
     };
@@ -97,6 +100,7 @@ class Vector3 {
 
         curr[0] *= scalar
         curr[1] *= scalar
+        curr[2] *= scalar
         // Don't delete the return statement.
         return this;
     };
@@ -110,7 +114,7 @@ class Vector3 {
         const o1 = other1.elements;
         const o2 = other2.elements;
 
-        let d = (o1[0] * o2[0]) + (o1[1] * o2[1]); // Modify this line to calculate this vector's magnitude.
+        let d = (o1[0] * o2[0]) + (o1[1] * o2[1]) + (o1[2] * o2[2]); // Modify this line to calculate this vector's magnitude.
 
         // Don't delete the return statement.
         return d;
@@ -161,6 +165,7 @@ class Vector3 {
 
         curr[0] /= m;
         curr[1] /= m;
+        curr[2] /= m;
 
         // Don't delete the return statement.
         return this;
