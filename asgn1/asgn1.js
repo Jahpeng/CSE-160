@@ -64,9 +64,15 @@ function connectVariablesToGLSL(){
   }
 }
 
+// constants
+const POINT = 0;
+const TRIANGLE = 1;
+const CIRCLE = 2;
 // global variables related to UI elements
 let g_selectedColor=[1.0, 1.0, 1.0, 1.0];
 let g_selectedSize=5;
+let g_selectedType=POINT;
+let g_selectedSegment=10;
 
 // setup actions for HTML UI elements
 function addActionsForHtmlUI(){
@@ -76,6 +82,9 @@ function addActionsForHtmlUI(){
   document.getElementById('red').onclick = function() {g_selectedColor = [1.0, 0.0, 0.0, 1.0];};
   document.getElementById('clearButton').onclick = function() {g_shapesList = []; renderAllShapes();};
 
+  document.getElementById('pointButton').onclick = function() {g_selectedType=POINT;};
+  document.getElementById('triButton').onclick = function() {g_selectedType=TRIANGLE;};
+  document.getElementById('circleButton').onclick = function() {g_selectedType=CIRCLE;};
   // color slider events
   document.getElementById('redSlide').addEventListener('mouseup', function() {g_selectedColor[0] = this.value/100;});
   document.getElementById('greenSlide').addEventListener('mouseup', function() {g_selectedColor[1] = this.value/100;});
@@ -83,6 +92,10 @@ function addActionsForHtmlUI(){
 
   // size slider event
   document.getElementById('sizeSlide').addEventListener('mouseup', function() {g_selectedSize = this.value;});
+  document.getElementById('segmentSlide').addEventListener('mouseup', function() {g_selectedSegment = this.value;});
+
+  // my picture
+  document.getElementById('pictureButton').onclick = function() {drawPicture();};
 }
 
 function main() {
@@ -120,7 +133,19 @@ function click(ev) {
   let [x,y] = convertCoordinatesEventToGL(ev);
 
   // creating and storing new point
-  let point = new Point();
+  //let point = new Triangle(); //Triangle();//Point();
+  let point;
+  if (g_selectedType == POINT){
+    point = new Point();
+  }
+  else if (g_selectedType == TRIANGLE){
+    point = new Triangle();
+  }
+  else{
+    point = new Circle();
+    point.segments = g_selectedSegment;
+    //console.log(g_selectedSegment);
+  }
   point.position = [x,y];
   point.color = g_selectedColor.slice();
   point.size = g_selectedSize;
