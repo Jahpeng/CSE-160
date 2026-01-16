@@ -69,7 +69,7 @@ const POINT = 0;
 const TRIANGLE = 1;
 const CIRCLE = 2;
 // global variables related to UI elements
-let g_selectedColor=[1.0, 1.0, 1.0, 1.0];
+let g_selectedColor=[1.0, 0.0, 0.0, 1.0];
 let g_selectedSize=5;
 let g_selectedType=POINT;
 let g_selectedSegment=10;
