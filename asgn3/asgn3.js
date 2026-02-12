@@ -170,7 +170,7 @@ function addActionsForHtmlUI(){
 
   //attemp at rotating by dragging on canvas
   //document.getElementById('webgl').addEventListener('mousedown', function() {g_click_down = true;});
-  document.getElementById('webgl').addEventListener('mousemove', function(ev) {if(ev.buttons == 1) {g_pos = convertCoordinatesEventToGL(ev)};});
+  document.getElementById('webgl').addEventListener('mousemove', function(ev) {if(ev.buttons == 1) {g_pos = convertCoordinatesEventToGL(ev)} else {g_pos = [0,0]}});
   document.getElementById('webgl').addEventListener('click', function(ev) {if(ev.shiftKey){g_shift_click = true;}else{g_shift_click = false;}});
 
   // size slider event
@@ -272,6 +272,8 @@ function main() {
   //////canvas.onmousedown = click;
   //canvas.onmousedown = function(ev){ click(ev) }; // = click //also works
   /////canvas.onmousemove = function(ev){ if(ev.buttons == 1) {click(ev)} };
+  document.onkeydown = keydown;
+
   initTextures();
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -352,12 +354,13 @@ function click(ev) {
 
 // Take the event (ev) from click and return the WebGL Coordinates
 function convertCoordinatesEventToGL(ev){
-  var x = ev.clientX; // x coordinate of a mouse pointer
-  var y = ev.clientY; // y coordinate of a mouse pointer
+  var x = ev.movementX//ev.clientX; // x coordinate of a mouse pointer
+  var y = ev.movementY//ev.clientY; // y coordinate of a mouse pointer
   var rect = ev.target.getBoundingClientRect();
 
-  x = ((x - rect.left) - canvas.width/2)/(canvas.width/2);
-  y = (canvas.height/2 - (y - rect.top))/(canvas.height/2);
+  //x = ((x - rect.left) - canvas.width/2)/(canvas.width/2);
+  //y = (canvas.height/2 - (y - rect.top))/(canvas.height/2);
+  //console.log(x,y)
 
   return([x,y]);
 }
@@ -375,21 +378,174 @@ function updateAnimationAngles(){
   }
 }
 
+var player_camera = new Camera()
+console.log("player camera eye: " + player_camera.eye.elements);
+var g_eye= [0,0,3];//player_camera.eye //[0,0,3];
+var g_at= [0,0,-100];//player_camera.at //[0,0,-100];
+var g_up= [0,1,0]//player_camera.up //[0,1,0];
+function keydown(ev){
+
+  if (ev.keyCode == 87) {
+    // W
+    //console.log("W PRESSED");
+
+    player_camera.forward();
+    //console.log(player_camera.eye.elements);
+  } else if (ev.keyCode == 65) {
+    // A
+    //console.log("A PRESSED");
+    player_camera.left();
+    //g_eye[0] -= .2;
+  } else if (ev.keyCode == 83) {
+    // S
+    //console.log("S PRESSED");
+    player_camera.back();
+  } else if (ev.keyCode == 68) {
+    // D
+    //console.log("D PRESSED");
+    player_camera.right();
+    //g_eye[0] += .2;
+  } else if (ev.keyCode == 81) {
+    // Q
+    //console.log("Q PRESSED");
+    player_camera.rotateLeft(duration); //duration for debugging
+  } else if (ev.keyCode == 69) {
+    // E
+    //console.log("E PRESSED");
+    player_camera.rotateRight();
+  }
+
+  renderAllShapes();
+}
+
+let duration;
+//var g_eye= [0,0,3];//player_camera.eye //[0,0,3];
+//var g_at= [0,0,-100];//player_camera.at //[0,0,-100];
+//var g_up= [0,1,0]//player_camera.up //[0,1,0];
 // draws all the shapes that are supposed to be on canvas
+
+//MAP 32x32
+var g_map=[
+  [0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 2, 0, 0, 0, 0, 2, 6, 2, 2, 6, 2, 2, 6, 2, 2, 6, 1, 2, 3, 4, 3, 2, 1, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 2, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0],
+  [0, 0, 10, 2, 0, 0, 0, 2, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 10, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 9, 0, 2, 0, 0, 2, 0, 0, 10, 0, 0, 10, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 2, 2, 2, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2],
+  [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 2, 2, 2, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 10, 0, 0, 10, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 9, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 2, 9, 0, 0, 2, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 2, 0, 0],
+  [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 2, 0, 2, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 2, 2, 1, 1, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 0, 0, 2, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 6, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
+];
+// >0 :: block
+// 1-4 :: height (number of blocks to stack)
+// 5-8 :: use texture 1 instead of 0
+// 9 :: stone + plank + plank + stone 
+// 10 :: stone + plank + stone
+function drawMap(){
+  //var wall = new Cube();
+  for (x=0; x<32; x++){
+    for (y=0; y<32; y++){
+      if (g_map[x][y] > 0 && g_map[x][y] < 5){
+        for (i=0; i < g_map[x][y]; i++){
+          var wall = new Cube();
+          wall.color=[1,0,1,1];
+          wall.textureNum=0;
+          //wall.matrix.scale(.5,.5,.5)
+          wall.matrix.translate(x-16,-.75+i,y-16);
+          wall.render();
+        }
+      } else if (g_map[x][y] > 4 && g_map[x][y] < 9){
+        for (i=0; i < (g_map[x][y]-4); i++){
+          var wall = new Cube();
+          wall.color=[1,0,1,1];
+          wall.textureNum=1;
+          //wall.matrix.scale(.5,.5,.5)
+          wall.matrix.translate(x-16,-.75+i,y-16);
+          wall.render();
+        }
+      } else if (g_map[x][y] == 9){
+        for (i=0; i < 4; i++){
+          var wall = new Cube();
+          wall.color=[1,0,1,1];
+          if (i == 0 || i == 3){
+            wall.textureNum=0;
+          }
+          else{
+            wall.textureNum=1;
+          }
+          //wall.matrix.scale(.5,.5,.5)
+          wall.matrix.translate(x-16,-.75+i,y-16);
+          wall.render();
+        }
+      } else if (g_map[x][y] == 10){
+        for (i=0; i < 3; i++){
+          var wall = new Cube();
+          wall.color=[1,0,1,1];
+          if (i == 0 || i == 2){
+            wall.textureNum=0;
+          }
+          else{
+            wall.textureNum=1;
+          }
+          wall.matrix.translate(x-16,-.75+i,y-16);
+          wall.render();
+        }
+      }
+    }
+  }
+}
+
 function renderAllShapes(){
 
   //start timer
   var startTime = performance.now();
 
   var projMat = new Matrix4();
+  projMat.setPerspective(60, canvas.width/canvas.height, .1, 100)  
+  //(fov, aspect ratio, near plane, ?)
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
 
   var viewMat = new Matrix4();
+  //viewMat.setLookAt(g_eye[0], g_eye[1], g_eye[2], g_at[0], g_at[1], g_at[2], g_up[0], g_up[1], g_up[2]);
+  viewMat.setLookAt(player_camera.eye.elements[0],player_camera.eye.elements[1],player_camera.eye.elements[2],  player_camera.at.elements[0],player_camera.at.elements[1],player_camera.at.elements[2],  player_camera.up.elements[0],player_camera.up.elements[1],player_camera.up.elements[2]); //(eye pos,  look at,  up)
+  // z: -1 is the front and 1 is back of bird
+  // z: smaller number-> forward
+  //    larger number-> backward
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMat.elements);
 
   var globalRotMat=new Matrix4().rotate(g_globalAngle,0,1,0);
-  globalRotMat.rotate(g_pos[0]*100, 0,1,0);
-  globalRotMat.rotate(g_pos[1]*100, 1,0,0);
+  // globalRotMat.rotate(g_pos[0]*100, 0,1,0);
+  // globalRotMat.rotate(g_pos[1]*100, 1,0,0);    drag mouse on canvas to move
+  if (g_pos[0] > 0){
+    player_camera.rotateRightMouse();
+  }
+  else if (g_pos[0] < 0){
+    player_camera.rotateLeftMouse();
+  }
+
   //console.log(g_pos);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
@@ -397,6 +553,12 @@ function renderAllShapes(){
   //gl.clear(gl.COLOR_BUFFER_BIT);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+  drawMap();
+  // var wall = new Cube();
+  // wall.color=[1,0,1,1];
+  // wall.textureNum=0;
+  // wall.matrix.translate(x-32,-.75,y-32);
+  // wall.render();
 
   // NECK
   var neck = new Cube();
@@ -517,8 +679,33 @@ function renderAllShapes(){
   block2.matrix.translate(-2.5,.3, -.2);
   block2.render();
 
+  var block3 = new Cube();
+  block3.textureNum = -1;
+  block3.matrix.scale(0.3,0.3,0.3);
+  block3.matrix.translate(-0.5, 2.8, -.2);
+  block3.render();
+
+  //floor
+  var floor = new Cube();
+  floor.color=[0,0.7,0,1];
+  floor.textureNum = -2;
+  floor.matrix.translate(0, -.75, 0);
+  floor.matrix.scale(32,0,32);
+  floor.matrix.translate(-.5, 0, -.5);
+  floor.render();
+
+  //sky
+  var sky = new Cube();
+  sky.color=[0,0,.6,1];
+  sky.textureNum = -2;
+  sky.matrix.scale(50,50,50);
+  sky.matrix.translate(-.5, -.5, -.5);
+  sky.render();
+
+
+
   // check time and show on website
-  var duration = performance.now() - startTime;
+  duration = performance.now() - startTime;
   sendTextToHTML(" ms: " + Math.floor(duration) + " fps: " + Math.floor(1000/duration), "numdot");
 }
 

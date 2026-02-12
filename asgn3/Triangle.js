@@ -81,7 +81,7 @@ function drawTriangle3D(vertices){
 
 function drawTriangle3DUV(vertices_and_uv){
   var n = 3; // The number of vertices (reading 3 chunks of elements)
-
+  vertices_and_uv = new Float32Array(vertices_and_uv);
   // Create a buffer object
   var groupBuffer = gl.createBuffer();
   if (!groupBuffer) {
@@ -97,13 +97,13 @@ function drawTriangle3DUV(vertices_and_uv){
 
   var FSIZE = vertices_and_uv.BYTES_PER_ELEMENT;
   // Assign the buffer object to a_Position variable
-  gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, FSIZE*15, 0);
+  gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
 
   // Enable the assignment to a_Position variable
   gl.enableVertexAttribArray(a_Position);
 
   
-  gl.vertexAttribPointer(a_UV, 2, gl.FLOAT, false, FSIZE*15, FSIZE*9);  //3 not 2 WHY?
+  gl.vertexAttribPointer(a_UV, 2, gl.FLOAT, false, 0, FSIZE*9);  //3 not 2 WHY?
   gl.enableVertexAttribArray(a_UV);
 
   //return n;
